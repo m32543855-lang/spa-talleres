@@ -11,11 +11,11 @@ const siteUrl = "https://spatalleres.netlify.app"
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "S.P.A. Talleres | Enderezado y Pintura Automotriz",
-    template: "%s | S.P.A. Talleres",
+    default: "S.P.A Talleres | Planchado y Pintura en Arequipa",
+    template: "%s | S.P.A Talleres",
   },
   description:
-    "S.P.A. Talleres: especialistas en enderezado tecnico de carroceria y pintura automotriz al horno. Cotizaciones y atencion por WhatsApp.",
+    "S.P.A Talleres: especialistas en planchado, enderezado tecnico y pintura automotriz al horno en Arequipa. Cotizaciones y atencion por WhatsApp.",
   keywords: [
     "S.P.A. Talleres",
     "spa talleres",
@@ -41,8 +41,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    siteName: "S.P.A. Talleres",
-    title: "S.P.A. Talleres | Enderezado y Pintura Automotriz",
+    siteName: "S.P.A Talleres",
+    title: "S.P.A Talleres | Planchado y Pintura en Arequipa",
     description:
       "Especialistas en enderezado tecnico y pintura automotriz al horno.",
     locale: "es_EC",
@@ -51,13 +51,13 @@ export const metadata: Metadata = {
         url: "/images/logo.png",
         width: 512,
         height: 512,
-        alt: "Logo S.P.A. Talleres",
+        alt: "Logo S.P.A Talleres",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "S.P.A. Talleres | Enderezado y Pintura Automotriz",
+    title: "S.P.A Talleres | Planchado y Pintura en Arequipa",
     description:
       "Especialistas en enderezado tecnico y pintura automotriz al horno.",
     images: ["/images/logo.png"],

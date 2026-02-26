@@ -33,8 +33,12 @@ export default function Hero() {
           </Reveal>
           <Reveal delay={130}>
             <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground lg:text-lg">
-              Planchado y pintura profesional al horno en Arequipa, con
-              resultados duraderos.
+              En S.P.A Talleres realizamos planchado y pintura profesional al
+              horno en Arequipa, con resultados duraderos.
+            </p>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground/90 lg:text-base">
+              Somos SPA Talleres Arequipa, tu Taller S.P.A en Arequipa para
+              enderezado y pintura automotriz.
             </p>
           </Reveal>
           <Reveal delay={220} className="inline-block">
