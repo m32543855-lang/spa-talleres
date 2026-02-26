@@ -33,8 +33,8 @@ export default function Hero() {
           </Reveal>
           <Reveal delay={130}>
             <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground lg:text-lg">
-              Planchado y pintura profesional al horno en Arequipa. Resultados
-              duraderos.
+              Planchado y pintura profesional al horno en Arequipa, con
+              resultados duraderos.
             </p>
           </Reveal>
           <Reveal delay={220} className="inline-block">
