@@ -82,7 +82,7 @@ export default function Navbar() {
           </div>
           <div className="block max-w-[160px] sm:max-w-none">
             <span className="block font-mono text-[13px] font-bold leading-none tracking-wider text-foreground sm:text-sm">
-              S.P.A.
+              S.P.A. Talleres
             </span>
             <span className="mt-0.5 block truncate text-[8px] leading-tight tracking-[0.2em] text-muted-foreground sm:text-[9px]">
               ACABADO GARANTIZADO
@@ -149,7 +149,7 @@ export default function Navbar() {
                 </div>
                 <div>
                   <span className="block font-mono text-base font-bold leading-none tracking-wider text-foreground">
-                    S.P.A.
+                    S.P.A. Talleres
                   </span>
                   <span className="mt-0.5 block text-[9px] leading-tight tracking-[0.2em] text-muted-foreground">
                     ACABADO GARANTIZADO
