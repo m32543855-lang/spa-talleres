@@ -10,6 +10,14 @@ const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat
 export const metadata: Metadata = {
   title: 'S.P.A. Servicio Profesional Arequipa | Pintura y Planchado Automotriz',
   description: 'Planchado y Pintura Profesional al Horno en Arequipa. Resultados duraderos. Servicio profesional automotriz.',
+  icons: {
+    icon: [
+      { url: '/images/logo.png?v=spa-logo', type: 'image/png' },
+      { url: '/favicon.ico?v=spa-logo' },
+    ],
+    shortcut: '/images/logo.png?v=spa-logo',
+    apple: '/images/logo.png?v=spa-logo',
+  },
 }
 
 export const viewport: Viewport = {
