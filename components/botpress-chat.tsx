@@ -1,7 +1,12 @@
 "use client"
 
 import { useState, type CSSProperties } from "react"
-import { Webchat, type Configuration } from "@botpress/webchat"
+import {
+  Webchat,
+  type BlockObjects,
+  type Configuration,
+  type Renderers,
+} from "@botpress/webchat"
 
 const clientId = "3d5a2949-318a-4f75-92d4-d0b2000fbf28"
 
@@ -48,6 +53,242 @@ const configuration: Configuration = {
   showPoweredBy: false,
 }
 
+type ButtonVariant = BlockObjects["button"]["variant"]
+type ActionKind =
+  | "link"
+  | "cancel"
+  | "confirm"
+  | "reschedule"
+  | "schedule"
+  | "quote"
+  | "support"
+  | "default"
+
+const sanitizeButtonLabel = (text: string) =>
+  text
+    .replace(
+      /(?:[\uD83C-\uDBFF][\uDC00-\uDFFF])|[\u2600-\u27BF]|\uFE0F/g,
+      ""
+    )
+    .replace(/[^0-9A-Za-zÁ-ÿ\s.,:/()\-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+
+const normalizeForMatch = (text: string) =>
+  text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+
+const getActionKind = (text: string, variant: ButtonVariant): ActionKind => {
+  const value = normalizeForMatch(text)
+
+  if (variant === "link") return "link"
+  if (/(cancel|cancelar|anular|stop|detener|no\b|decline|reject)/.test(value))
+    return "cancel"
+  if (/(^si$|^yes$|confirm|aceptar|continuar|ok\b)/.test(value))
+    return "confirm"
+  if (/(reagendar|reprogram|reschedule)/.test(value)) return "reschedule"
+  if (/(agendar|agenda|cita|reservar|schedule|book|appointment)/.test(value))
+    return "schedule"
+  if (/(cotizar|cotizacion|quote|pricing|price|presupuesto)/.test(value))
+    return "quote"
+  if (/(ayuda|duda|soporte|support|contact|contacto|whatsapp|pregunta|question)/.test(value))
+    return "support"
+  return "default"
+}
+
+const actionIcon = (kind: ActionKind) => {
+  switch (kind) {
+    case "link":
+      return (
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
+          <path
+            d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07L11.8 5"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07L12.2 19"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      )
+    case "cancel":
+      return (
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+          <path
+            d="M9 9l6 6M15 9l-6 6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      )
+    case "confirm":
+      return (
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
+          <path
+            d="m20 6-11 11-5-5"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      )
+    case "reschedule":
+      return (
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
+          <rect
+            x="3"
+            y="4"
+            width="18"
+            height="18"
+            rx="2"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+          <path
+            d="M16 2v4M8 2v4M3 10h18M14 14h4v4M18 18l-5-5"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      )
+    case "schedule":
+      return (
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
+          <rect
+            x="3"
+            y="4"
+            width="18"
+            height="18"
+            rx="2"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+          <path
+            d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      )
+    case "quote":
+      return (
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
+          <path
+            d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 0 1 0 7H6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      )
+    case "support":
+      return (
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+          <path
+            d="M9 10a3 3 0 0 1 6 0c0 2-2 3-2 3"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <path
+            d="M12 18h.01"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      )
+    default:
+      return (
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+          <path
+            d="M21 21l-4.35-4.35"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      )
+  }
+}
+
+const ActionButtonRenderer = ({
+  text,
+  buttonValue,
+  variant,
+  reusable,
+  sendMessage,
+  isReadOnly,
+}: BlockObjects["button"]) => {
+  const [isActivated, setIsActivated] = useState(false)
+  const label = sanitizeButtonLabel(text ?? "") || (text ?? "").trim()
+  const disabled = Boolean(isReadOnly || (!reusable && isActivated))
+  const kind = getActionKind(label, variant)
+
+  if (variant === "link") {
+    return (
+      <a
+        className="bpMessageBlocksButton spa-chat-action"
+        data-activated={isActivated ? "" : undefined}
+        data-type="link"
+        href={buttonValue}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(event) => {
+          if (disabled) {
+            event.preventDefault()
+            return
+          }
+          setIsActivated(true)
+        }}
+        style={disabled ? { pointerEvents: "none", opacity: 0.7 } : undefined}
+      >
+        <span className="spa-chat-action-icon">{actionIcon(kind)}</span>
+        {label}
+      </a>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      className="bpMessageBlocksButton spa-chat-action"
+      data-activated={isActivated ? "" : undefined}
+      data-type="action"
+      disabled={disabled}
+      onClick={() => {
+        if (disabled) return
+        setIsActivated(true)
+        sendMessage?.({ type: "text", text: label, value: buttonValue })
+      }}
+      style={isReadOnly ? { pointerEvents: "none", opacity: 0.7 } : undefined}
+    >
+      <span className="spa-chat-action-icon">{actionIcon(kind)}</span>
+      {label}
+    </button>
+  )
+}
+
+const renderers: Partial<Renderers> = {
+  button: ActionButtonRenderer,
+}
+
 export default function BotpressChat() {
   const [isWebchatOpen, setIsWebchatOpen] = useState(false)
 
@@ -57,7 +298,7 @@ export default function BotpressChat() {
 
   const edge = 16
   const chatWidth = "min(420px, calc(100vw - 16px))"
-  const chatHeight = "min(680px, calc(100dvh - 16px))"
+  const chatHeight = "min(680px, 100dvh)"
   const themeVars = {
     "--bpPrimary-600": "#c8ff00",
     "--bpPrimary-700": "#b2e400",
@@ -140,7 +381,7 @@ export default function BotpressChat() {
           ...themeVars,
           position: "fixed",
           right: edge,
-          bottom: "max(0px, env(safe-area-inset-bottom))",
+          bottom: 0,
           width: chatWidth,
           height: chatHeight,
           zIndex: 59,
@@ -170,6 +411,7 @@ export default function BotpressChat() {
         <Webchat
           clientId={clientId}
           configuration={configuration}
+          renderers={renderers}
           style={{ width: "100%", height: "100%" }}
         />
       </div>
@@ -244,6 +486,7 @@ export default function BotpressChat() {
           border-radius: 16px 16px 0 0;
           border-color: rgba(200, 255, 0, 0.2);
           background: #0f0f0f;
+          padding-bottom: env(safe-area-inset-bottom);
         }
         .spa-chat-panel .bpHeaderContainer {
           background: linear-gradient(
@@ -268,10 +511,13 @@ export default function BotpressChat() {
           padding-top: 12px;
         }
         .spa-chat-panel .bpComposerContainer {
-          margin: 0 12px 12px;
+          margin: 0 12px 0;
           border-radius: 14px;
           border-color: rgba(200, 255, 0, 0.22);
           background: rgba(18, 18, 18, 0.92);
+        }
+        .spa-chat-panel .bpComposerFooter {
+          margin-bottom: 0;
         }
         .spa-chat-panel .bpComposerInput {
           color: #f5f5f5;
@@ -288,6 +534,19 @@ export default function BotpressChat() {
         }
         .spa-chat-panel .bpMessageBlocksButton:hover {
           background: var(--button-bg-hover);
+        }
+        .spa-chat-action {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .spa-chat-action-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          color: currentColor;
+          opacity: 0.95;
+          flex-shrink: 0;
         }
         .spa-chat-close {
           position: absolute;
