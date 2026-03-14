@@ -1,15 +1,12 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, Montserrat } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import dynamic from 'next/dynamic'
+import BotpressChatClient from '@/components/botpress-chat-client'
 import './globals.css'
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat" });
 const siteUrl = "https://spatalleres.netlify.app"
-const BotpressChat = dynamic(() => import('@/components/botpress-chat'), {
-  ssr: false,
-})
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -88,7 +85,7 @@ export default function RootLayout({
     <html lang="es">
       <body className={`${inter.variable} ${montserrat.variable} font-sans antialiased`}>
         {children}
-        <BotpressChat />
+        <BotpressChatClient />
         <Analytics />
       </body>
     </html>
