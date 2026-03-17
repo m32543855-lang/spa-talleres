@@ -407,33 +407,10 @@ export default function BotpressChat() {
         <Webchat
           clientId={clientId}
           configuration={configuration}
+          closeWindow={closeWebchat}
           renderers={renderers}
           style={{ width: "100%", height: "100%" }}
         />
-        <button
-          type="button"
-          aria-label="Cerrar ventana del chat"
-          className="spa-chat-close"
-          onClick={(event) => {
-            event.stopPropagation()
-            closeWebchat()
-          }}
-        >
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            width="16"
-            height="16"
-            fill="none"
-          >
-            <path
-              d="M7 7l10 10M17 7 7 17"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-            />
-          </svg>
-        </button>
       </div>
       <style jsx global>{`
         .spa-chat-launcher {
@@ -517,7 +494,6 @@ export default function BotpressChat() {
           border-bottom: 1px solid rgba(200, 255, 0, 0.2);
         }
         .spa-chat-panel .bpHeaderContentContainer {
-          padding-right: 52px;
           background: rgba(8, 8, 8, 0.65);
           border: 1px solid rgba(200, 255, 0, 0.2);
         }
@@ -525,6 +501,38 @@ export default function BotpressChat() {
           display: flex;
           align-items: center;
           gap: 4px;
+        }
+        .spa-chat-panel .bpHeaderContentActionsIcons,
+        .spa-chat-panel .bpConversationHistoryCloseButton {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 34px;
+          height: 34px;
+          border-radius: 999px;
+          border: 1px solid rgba(200, 255, 0, 0.24);
+          color: rgba(245, 245, 245, 0.92);
+          background: rgba(8, 8, 8, 0.78);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+          transition:
+            transform 160ms ease,
+            background-color 160ms ease,
+            border-color 160ms ease,
+            color 160ms ease,
+            box-shadow 160ms ease;
+        }
+        .spa-chat-panel .bpHeaderContentActionsIcons:hover,
+        .spa-chat-panel .bpConversationHistoryCloseButton:hover {
+          transform: translateY(-1px);
+          background: rgba(200, 255, 0, 0.18);
+          border-color: rgba(200, 255, 0, 0.48);
+          color: #c8ff00;
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
+        }
+        .spa-chat-panel .bpHeaderContentActionsIcons:focus-visible,
+        .spa-chat-panel .bpConversationHistoryCloseButton:focus-visible {
+          outline: 2px solid rgba(200, 255, 0, 0.7);
+          outline-offset: 2px;
         }
         .spa-chat-panel .bpHeaderTitle {
           font-weight: 700;
@@ -574,40 +582,6 @@ export default function BotpressChat() {
           opacity: 0.95;
           flex-shrink: 0;
         }
-        .spa-chat-close {
-          position: absolute;
-          top: 12px;
-          right: 12px;
-          z-index: 12;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 36px;
-          height: 36px;
-          border-radius: 999px;
-          border: 1px solid rgba(200, 255, 0, 0.32);
-          color: rgba(245, 245, 245, 0.92);
-          background: rgba(8, 8, 8, 0.92);
-          box-shadow: 0 10px 22px rgba(0, 0, 0, 0.32);
-          cursor: pointer;
-          transition:
-            transform 160ms ease,
-            background-color 160ms ease,
-            border-color 160ms ease,
-            color 160ms ease,
-            box-shadow 160ms ease;
-        }
-        .spa-chat-close:hover {
-          transform: translateY(-1px);
-          background: rgba(200, 255, 0, 0.18);
-          border-color: rgba(200, 255, 0, 0.48);
-          color: #c8ff00;
-          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
-        }
-        .spa-chat-close:focus-visible {
-          outline: 2px solid rgba(200, 255, 0, 0.7);
-          outline-offset: 2px;
-        }
         @media (max-width: 640px) {
           .spa-chat-launcher {
             right: 12px;
@@ -625,10 +599,6 @@ export default function BotpressChat() {
           }
           .spa-chat-panel .bpHeaderContainer {
             padding-top: calc(4px + env(safe-area-inset-top));
-          }
-          .spa-chat-close {
-            top: calc(env(safe-area-inset-top) + 12px);
-            right: 12px;
           }
           .spa-chat-backdrop {
             background: rgba(5, 5, 5, 0.6);
